@@ -21,7 +21,7 @@ global.cy = {
 const {
   matchImageSnapshotCommand,
   addMatchImageSnapshotCommand,
-} = require('../command');
+} = require('../lib/command');
 
 const defaultOptions = {
   failureThreshold: 0,

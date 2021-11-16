@@ -6,7 +6,11 @@
  */
 
 import { MATCH, RECORD } from './constants';
-import { MatchTaskOptions, SnapshotOptions } from './types';
+import {
+  DiffImageToSnapshotResult,
+  MatchTaskOptions,
+  SnapshotOptions,
+} from './types';
 
 const screenshotsFolder = Cypress.config('screenshotsFolder');
 const updateSnapshots = Cypress.env('updateSnapshots') || false;
@@ -20,7 +24,7 @@ interface MatchImageSnapshotFn {
   (
     subject: unknown,
     name: string,
-    commandOptions: SnapshotOptions
+    commandOptions?: SnapshotOptions
   ): Cypress.Chainable;
 }
 
@@ -32,7 +36,7 @@ export function matchImageSnapshotCommand(defaultOptions?: SnapshotOptions) {
   ) => {
     const options = {
       ...defaultOptions,
-      ...((typeof maybeName === 'string' ? commandOptions : maybeName) || {}),
+      ...((typeof maybeName === 'string' ? commandOptions : maybeName) ?? {}),
     };
 
     if (screenshotsFolder === false) {
@@ -51,36 +55,38 @@ export function matchImageSnapshotCommand(defaultOptions?: SnapshotOptions) {
 
     const name = typeof maybeName === 'string' ? maybeName : undefined;
     const target = subject ? cy.wrap(subject) : cy;
-    target.screenshot(name!, options);
+    if (name === undefined) {
+      target.screenshot(options);
+    } else {
+      target.screenshot(name, options);
+    }
 
-    return cy
-      .task(RECORD)
-      .then(
-        ({
-          pass,
-          added,
-          updated,
-          diffSize,
-          imageDimensions,
-          diffRatio,
-          diffPixelCount,
-          diffOutputPath,
-        }: any) => {
-          if (!pass && !added && !updated) {
-            const message = diffSize
-              ? `Image size (${imageDimensions.baselineWidth}x${imageDimensions.baselineHeight}) different than saved snapshot size (${imageDimensions.receivedWidth}x${imageDimensions.receivedHeight}).\nSee diff for details: ${diffOutputPath}`
-              : `Image was ${
-                  diffRatio * 100
-                }% different from saved snapshot with ${diffPixelCount} different pixels.\nSee diff for details: ${diffOutputPath}`;
+    return cy.task(RECORD).then((taskResult) => {
+      const {
+        pass,
+        added,
+        updated,
+        diffSize,
+        imageDimensions,
+        diffRatio,
+        diffPixelCount,
+        diffOutputPath,
+      } = taskResult as DiffImageToSnapshotResult;
 
-            if (failOnSnapshotDiff) {
-              throw new Error(message);
-            } else {
-              Cypress.log({ message });
-            }
-          }
+      if (!pass && !added && !updated) {
+        const message = diffSize
+          ? `Image size (${imageDimensions.baselineWidth}x${imageDimensions.baselineHeight}) different than saved snapshot size (${imageDimensions.receivedWidth}x${imageDimensions.receivedHeight}).\nSee diff for details: ${diffOutputPath}`
+          : `Image was ${
+              diffRatio * 100
+            }% different from saved snapshot with ${diffPixelCount} different pixels.\nSee diff for details: ${diffOutputPath}`;
+
+        if (failOnSnapshotDiff) {
+          throw new Error(message);
+        } else {
+          Cypress.log({ message });
         }
-      );
+      }
+    });
   };
 
   return matchImageSnapshot;

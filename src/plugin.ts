@@ -11,24 +11,11 @@ import * as jestImageSnapshot from 'jest-image-snapshot/src/diff-snapshot';
 import path from 'path';
 import pkgDir from 'pkg-dir';
 import { MATCH, RECORD } from './constants';
-import { MatchTaskOptions } from './types';
-
-type DiffImageToSnapshot = (args: {
-  snapshotsDir: string;
-  diffDir: string;
-  receivedImageBuffer: Buffer;
-  snapshotIdentifier: string;
-  failureThreshold?: number;
-  failureThresholdType?: 'pixel' | 'percent';
-  updateSnapshot: boolean;
-}) => DiffImageToSnapshotResult;
-
-type DiffImageToSnapshotResult = {
-  pass: boolean;
-  added: boolean;
-  updated: boolean;
-  diffOutputPath: string;
-};
+import {
+  DiffImageToSnapshot,
+  DiffImageToSnapshotResult,
+  MatchTaskOptions,
+} from './types';
 
 const diffImageToSnapshot =
   jestImageSnapshot.diffImageToSnapshot as DiffImageToSnapshot;
@@ -40,8 +27,15 @@ const kebabSnap = '-snap.png';
 const dotSnap = '.snap.png';
 const dotDiff = '.diff.png';
 
+const packageJsonPath = pkgDir.sync(process.cwd());
+if (!packageJsonPath) {
+  throw new Error(
+    `could not determine path of package.json (and thus, of the cypress .snapshot-report directory)`
+  );
+}
+
 export const cachePath = path.join(
-  pkgDir.sync(process.cwd())!,
+  packageJsonPath,
   'cypress',
   '.snapshot-report'
 );

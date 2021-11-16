@@ -11,7 +11,7 @@ const {
 const {
   matchImageSnapshotStart,
   matchImageSnapshotPlugin,
-} = require('../plugin');
+} = require('../lib/plugin');
 
 jest.mock('jest-image-snapshot/src/diff-snapshot', () => ({
   diffImageToSnapshot: jest

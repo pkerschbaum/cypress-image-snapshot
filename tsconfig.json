@@ -7,7 +7,7 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "outDir": "./",
+    "outDir": "./lib",
 
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
