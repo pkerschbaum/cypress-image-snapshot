@@ -15,13 +15,13 @@ global.Cypress = {
 };
 
 global.cy = {
-  wrap: subject => subject,
+  wrap: (subject) => subject,
 };
 
 const {
   matchImageSnapshotCommand,
   addMatchImageSnapshotCommand,
-} = require('../src/command');
+} = require('../command');
 
 const defaultOptions = {
   failureThreshold: 0,

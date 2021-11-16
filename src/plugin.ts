@@ -6,52 +6,80 @@
  */
 
 import fs from 'fs-extra';
-import { diffImageToSnapshot } from 'jest-image-snapshot/src/diff-snapshot';
+// @ts-expect-error -- we reach into internals of jest-image-snapshot here, no typings are available for that
+import * as jestImageSnapshot from 'jest-image-snapshot/src/diff-snapshot';
 import path from 'path';
 import pkgDir from 'pkg-dir';
 import { MATCH, RECORD } from './constants';
+import { MatchTaskOptions } from './types';
 
-let snapshotOptions = {};
-let snapshotResult = {};
+type DiffImageToSnapshot = (args: {
+  snapshotsDir: string;
+  diffDir: string;
+  receivedImageBuffer: Buffer;
+  snapshotIdentifier: string;
+  failureThreshold?: number;
+  failureThresholdType?: 'pixel' | 'percent';
+  updateSnapshot: boolean;
+}) => DiffImageToSnapshotResult;
+
+type DiffImageToSnapshotResult = {
+  pass: boolean;
+  added: boolean;
+  updated: boolean;
+  diffOutputPath: string;
+};
+
+const diffImageToSnapshot =
+  jestImageSnapshot.diffImageToSnapshot as DiffImageToSnapshot;
+
+let snapshotOptions: undefined | MatchTaskOptions;
+let snapshotResult: undefined | DiffImageToSnapshotResult;
 let snapshotRunning = false;
 const kebabSnap = '-snap.png';
 const dotSnap = '.snap.png';
 const dotDiff = '.diff.png';
 
 export const cachePath = path.join(
-  pkgDir.sync(process.cwd()),
+  pkgDir.sync(process.cwd())!,
   'cypress',
   '.snapshot-report'
 );
 
-export function matchImageSnapshotOptions() {
-  return (options = {}) => {
-    snapshotOptions = options;
-    snapshotRunning = true;
-    return null;
-  };
+export function matchImageSnapshotStart(options?: MatchTaskOptions) {
+  snapshotOptions = options;
+  snapshotRunning = true;
+  return null;
 }
 
-export function matchImageSnapshotResult() {
-  return () => {
-    snapshotRunning = false;
+export function matchImageSnapshotEnd() {
+  snapshotRunning = false;
 
-    const { pass, added, updated } = snapshotResult;
+  if (!snapshotResult) {
+    throw new Error(`no snapshotResult is set`);
+  }
 
-    // @todo is there a less expensive way to share state between test and reporter?
-    if (!pass && !added && !updated && fs.existsSync(cachePath)) {
-      const cache = JSON.parse(fs.readFileSync(cachePath, 'utf8'));
-      cache.push(snapshotResult);
-      fs.writeFileSync(cachePath, JSON.stringify(cache), 'utf8');
-    }
+  const { pass, added, updated } = snapshotResult;
 
-    return snapshotResult;
-  };
+  // @todo is there a less expensive way to share state between test and reporter?
+  if (!pass && !added && !updated && fs.existsSync(cachePath)) {
+    const cache = JSON.parse(fs.readFileSync(cachePath, 'utf8'));
+    cache.push(snapshotResult);
+    fs.writeFileSync(cachePath, JSON.stringify(cache), 'utf8');
+  }
+
+  return snapshotResult;
 }
 
-export function matchImageSnapshotPlugin({ path: screenshotPath }) {
+export function matchImageSnapshotPlugin({
+  path: screenshotPath,
+}: Cypress.ScreenshotDetails): void | Cypress.AfterScreenshotReturnObject {
   if (!snapshotRunning) {
-    return null;
+    return;
+  }
+
+  if (!snapshotOptions) {
+    throw new Error(`no snapshotOptions are set`);
   }
 
   const {
@@ -69,9 +97,7 @@ export function matchImageSnapshotPlugin({ path: screenshotPath }) {
   const receivedImageBuffer = fs.readFileSync(screenshotPath);
   fs.removeSync(screenshotPath);
 
-  const { dir: screenshotDir, name } = path.parse(
-    screenshotPath
-  );
+  const { dir: screenshotDir, name } = path.parse(screenshotPath);
 
   // remove the cypress v5+ native retries suffix from the file name
   const snapshotIdentifier = name.replace(/ \(attempt [0-9]+\)/, '');
@@ -132,10 +158,13 @@ export function matchImageSnapshotPlugin({ path: screenshotPath }) {
   };
 }
 
-export function addMatchImageSnapshotPlugin(on, config) {
+export function addMatchImageSnapshotPlugin(
+  on: Cypress.PluginEvents,
+  _1: unknown
+) {
   on('task', {
-    [MATCH]: matchImageSnapshotOptions(config),
-    [RECORD]: matchImageSnapshotResult(config),
+    [MATCH]: matchImageSnapshotStart,
+    [RECORD]: matchImageSnapshotEnd,
   });
   on('after:screenshot', matchImageSnapshotPlugin);
 }

@@ -7,7 +7,7 @@ function fallback() {
   // do nothing
 }
 
-function reporter(runner) {
+function reporter(runner: any) {
   fs.writeFileSync(cachePath, JSON.stringify([]), 'utf8');
 
   runner.on('end', () => {
@@ -15,10 +15,11 @@ function reporter(runner) {
     if (cache.length) {
       console.log(chalk.red(`\n  (${chalk.underline.bold('Snapshot Diffs')})`));
 
-      cache.forEach(({ diffRatio, diffPixelCount, diffOutputPath }) => {
+      cache.forEach(({ diffRatio, diffPixelCount, diffOutputPath }: any) => {
         console.log(
-          `\n  - ${diffOutputPath}\n    Screenshot was ${diffRatio *
-            100}% different from saved snapshot with ${diffPixelCount} different pixels.\n`
+          `\n  - ${diffOutputPath}\n    Screenshot was ${
+            diffRatio * 100
+          }% different from saved snapshot with ${diffPixelCount} different pixels.\n`
         );
         termImage(diffOutputPath, { fallback });
       });

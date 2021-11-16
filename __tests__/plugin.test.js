@@ -4,12 +4,14 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import path from 'path';
-import { diffImageToSnapshot } from 'jest-image-snapshot/src/diff-snapshot';
-import {
-  matchImageSnapshotOptions,
+const path = require('path');
+const {
+  diffImageToSnapshot,
+} = require('jest-image-snapshot/src/diff-snapshot');
+const {
+  matchImageSnapshotStart,
   matchImageSnapshotPlugin,
-} from '../src/plugin';
+} = require('../plugin');
 
 jest.mock('jest-image-snapshot/src/diff-snapshot', () => ({
   diffImageToSnapshot: jest
@@ -33,7 +35,7 @@ describe('plugin', () => {
       updateSnapshots: true,
     };
 
-    matchImageSnapshotOptions()(options);
+    matchImageSnapshotStart(options);
 
     const result = matchImageSnapshotPlugin({
       path: path.join('/', 'cypress', 'screenshots', 'path', 'to', 'cheese'),
