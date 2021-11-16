@@ -13,7 +13,8 @@
     "forceConsistentCasingInFileNames": true,
 
     "strict": true,
-    "useUnknownInCatchVariables": true
+    "useUnknownInCatchVariables": true,
+    "skipLibCheck": true
   },
   "include": ["src/**/*"],
   "exclude": []
