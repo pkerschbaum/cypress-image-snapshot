@@ -23,7 +23,6 @@
     "chalk": "^4.1.2",
     "fs-extra": "^9.1.0",
     "glob": "^7.2.0",
-    "jest-image-snapshot": "^4.5.1",
     "pkg-dir": "^5.0.0",
     "term-img": "^6.0.0"
   },
@@ -43,13 +42,15 @@
     "eslint-plugin-node": "^11.1.0",
     "husky": "^7.0.4",
     "jest": "^27.3.1",
+    "jest-image-snapshot": "^4.5.1",
     "lint-staged": "^12.0.2",
     "prettier": "^2.4.1",
     "rimraf": "^3.0.2",
     "typescript": "^4.4.4"
   },
   "peerDependencies": {
-    "cypress": "^8.7.0"
+    "cypress": "^8.7.0",
+    "jest-image-snapshot": "^4.5.1"
   },
   "lint-staged": {
     "**/*.{ts,tsx}": [
