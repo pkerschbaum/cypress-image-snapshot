@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
+import path from 'path';
 import { diffImageToSnapshot } from 'jest-image-snapshot/src/diff-snapshot';
 import {
   matchImageSnapshotOptions,
@@ -36,14 +36,30 @@ describe('plugin', () => {
     matchImageSnapshotOptions()(options);
 
     const result = matchImageSnapshotPlugin({
-      path: '/cypress/screenshots/path/to/cheese',
+      path: path.join('/', 'cypress', 'screenshots', 'path', 'to', 'cheese'),
     });
+
     expect(result).toEqual({
-      path: '/cypress/snapshots/path/to/__diff_output__/cheese.diff.png',
+      path: path.join(
+        '/',
+        'cypress',
+        'snapshots',
+        'path',
+        'to',
+        '__diff_output__',
+        'cheese.diff.png'
+      ),
     });
     expect(diffImageToSnapshot).toHaveBeenCalledWith({
-      snapshotsDir: '/cypress/snapshots/path/to',
-      diffDir: '/cypress/snapshots/path/to/__diff_output__',
+      snapshotsDir: path.join('/', 'cypress', 'snapshots', 'path', 'to'),
+      diffDir: path.join(
+        '/',
+        'cypress',
+        'snapshots',
+        'path',
+        'to',
+        '__diff_output__'
+      ),
       updateSnapshot: true,
       receivedImageBuffer: 'cheese',
       snapshotIdentifier: 'cheese',
