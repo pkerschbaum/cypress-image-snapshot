@@ -46,8 +46,14 @@
     "typescript": "^4.4.4"
   },
   "peerDependencies": {
+    "@types/jest-image-snapshot": "^4.3.1",
     "cypress": "^8.7.0",
     "jest-image-snapshot": "^4.5.1"
+  },
+  "peerDependenciesMeta": {
+    "@types/jest-image-snapshot": {
+      "optional": true
+    }
   },
   "lint-staged": {
     "**/*.{ts,tsx}": [
