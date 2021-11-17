@@ -1,8 +1,25 @@
-# cypress-image-snapshot
+# @pkerschbaum/cypress-image-snapshot
 
-## 4.0.1
+## 1.0.0
+
+### Major Changes
+
+- c429e18: refactor: migrate project from babel&js to typescript
+
+  chore(deps)!: bump cypress to ^8.7.0
+
+- ab85219: refactor!: use /lib directory for compiled output
+
+  refactor!: move jest-image-snapshot to peerDependencies
+
+  chore(deps): bump some dependencies to latest
+
+  setup: add ESLint rules, pre-commit prettier format, VS Code settings.json
+
+  feat!: snapshots are now stored **next** to the Cypress spec file in the folder `__cy_image_snapshots__`
+  That's why `customSnapshotsDir` and `customDiffDir` got removed.
+
 ### Patch Changes
 
-
-
-- [`17f7927`](https://github.com/jaredpalmer/cypress-image-snapshot/commit/17f7927384bfdbd6cbb65d344c8337d32926b691) Thanks [@jaredpalmer](https://github.com/jaredpalmer)! - When using native retries that come in Cypress v5+ real image failures are marked as passed on the retries because cypress names the snapshots as 'filename (attempt X).png (and there is no configuration option to change this). The fix just removes the ' (attempt X)' suffix from the filename.
+- 19c00dd: test: fix tests when developing on windows
+- de02cf4: chore(package.json): change repository&author

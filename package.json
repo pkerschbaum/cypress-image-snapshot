@@ -1,6 +1,6 @@
 {
   "name": "@pkerschbaum/cypress-image-snapshot",
-  "version": "4.0.1",
+  "version": "1.0.0",
   "description": "Cypress bindings for jest-image-snapshot.",
   "repository": "https://github.com/pkerschbaum/cypress-image-snapshot",
   "author": "Patrick Kerschbaum <patrick.kerschbaum@gmail.com>, Jack Cross <jack@palmer.net>",
@@ -15,9 +15,7 @@
     "build": "tsc",
     "watch": "tsc --watch",
     "lint": "eslint --max-warnings 0 .",
-    "prepublish": "npm run build",
-    "changeset": "changeset",
-    "release": "changeset publish"
+    "prepublish": "yarn run build"
   },
   "dependencies": {
     "chalk": "^4.1.2",

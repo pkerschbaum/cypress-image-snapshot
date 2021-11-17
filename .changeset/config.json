@@ -1,9 +1,6 @@
 {
-  "$schema": "https://unpkg.com/@changesets/config@1.4.0/schema.json",
-  "changelog": [
-    "@changesets/changelog-github",
-    { "repo": "jaredpalmer/cypress-image-snapshot" }
-  ],
+  "$schema": "https://unpkg.com/@changesets/config@1.6.2/schema.json",
+  "changelog": "@changesets/cli/changelog",
   "commit": false,
   "linked": [],
   "access": "public",
