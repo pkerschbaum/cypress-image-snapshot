@@ -40,13 +40,13 @@ export const cachePath = path.join(
   '.snapshot-report'
 );
 
-export function matchImageSnapshotStart(options?: MatchTaskOptions) {
+function matchImageSnapshotStart(options?: MatchTaskOptions) {
   snapshotOptions = options;
   snapshotRunning = true;
   return null;
 }
 
-export function matchImageSnapshotEnd() {
+function matchImageSnapshotEnd() {
   snapshotRunning = false;
 
   if (!snapshotResult) {
@@ -65,7 +65,7 @@ export function matchImageSnapshotEnd() {
   return snapshotResult;
 }
 
-export function matchImageSnapshotPlugin(
+function matchImageSnapshotPlugin(
   cypressScreenshotDetails: Cypress.ScreenshotDetails
 ): void | Cypress.AfterScreenshotReturnObject {
   if (!snapshotRunning) {

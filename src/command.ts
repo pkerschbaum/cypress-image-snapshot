@@ -28,7 +28,7 @@ interface MatchImageSnapshotFn {
   ): Cypress.Chainable;
 }
 
-export function matchImageSnapshotCommand(defaultOptions?: SnapshotOptions) {
+function matchImageSnapshotCommand(defaultOptions?: SnapshotOptions) {
   const matchImageSnapshot: MatchImageSnapshotFn = (
     subject: unknown,
     maybeName?: string | SnapshotOptions,
