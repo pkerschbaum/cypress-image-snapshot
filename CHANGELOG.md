@@ -1,5 +1,11 @@
 # @pkerschbaum/cypress-image-snapshot
 
+## 1.0.1
+
+### Patch Changes
+
+- a07f1a3: add @types/jest-image-snapshot as peerDependency to avoid compilation errors (when used in TypeScript projects with skipLibCheck false)
+
 ## 1.0.0
 
 ### Major Changes
