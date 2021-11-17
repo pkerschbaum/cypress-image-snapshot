@@ -1,7 +1,10 @@
 import { MatchImageSnapshotOptions } from 'jest-image-snapshot';
 
 export type SnapshotOptions = Partial<Cypress.ScreenshotOptions> &
-  MatchImageSnapshotOptions;
+  Omit<
+    MatchImageSnapshotOptions,
+    'customSnapshotsDir' | 'customDiffDir' | 'customSnapshotIdentifier'
+  >;
 
 declare global {
   namespace Cypress {
@@ -15,7 +18,7 @@ declare global {
 }
 
 export type MatchTaskOptions = {
-  screenshotsFolder: string;
+  snapshotFolder: string;
   updateSnapshots: boolean;
   options: SnapshotOptions;
 };
