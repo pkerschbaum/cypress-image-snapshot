@@ -13,7 +13,7 @@
   "scripts": {
     "prebuild": "rimraf ./lib",
     "build": "tsc",
-    "test": "jest --no-cache",
+    "watch": "tsc --watch",
     "lint": "eslint --max-warnings 0 .",
     "prepublish": "npm run build",
     "changeset": "changeset",
@@ -41,7 +41,6 @@
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-node": "^11.1.0",
     "husky": "^7.0.4",
-    "jest": "^27.3.1",
     "jest-image-snapshot": "^4.5.1",
     "lint-staged": "^12.0.2",
     "prettier": "^2.4.1",
@@ -71,11 +70,5 @@
     "env": {
       "cypress/globals": true
     }
-  },
-  "jest": {
-    "testPathIgnorePatterns": [
-      "<rootDir>/examples/",
-      "<rootDir>/node_modules/"
-    ]
   }
 }

@@ -2,7 +2,9 @@
 
 This is a fork of [jaredpalmer/cypress-image-snapshot](https://github.com/jaredpalmer/cypress-image-snapshot) with following changes applied:
 
-- The project was re-written with TypeScript. No `@types/cypress-image-snapshot` necessary for consumers anymore.
+- The project was re-written with TypeScript (no `@types/cypress-image-snapshot` necessary anymore).
+- Snapshots are now stored **next** to the Cypress spec file in the folder `__cy_image_snapshots__`.  
+  That's why the options `customSnapshotsDir` and `customDiffDir` were removed.
 
 ## Installation
 
